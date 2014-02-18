@@ -5,44 +5,68 @@
 #include <fcntl.h>
 #include <unistd.h>
 
-#ifndef NR_OPEN
+#ifdef __APPLE__
 #define NR_OPEN 1024
+#else
+#include <linux/limits.h>
 #endif
 
-int main (void)
-{
-    pid_t pid;
-    int i;
+void create_child_process() {
+    pid_t pid = fork();
+    if (pid == -1)
+        exit(-1);
+    else if (pid != 0)
+        exit(EXIT_SUCCESS);
+}
+
+void create_new_session() {
+    if (setsid() == -1)
+        exit(-1);
+}
+
+void change_current_directory() {
+    if (chdir("/") == -1)
+        exit(-1);
+}
+
+void close_opened_files() {
+    for (int i = 0; i < NR_OPEN; i++)
+        close(i);
+}
+
+void redirect_stdin_out_err() {
+    /* stdin */
+    open("/dev/null", O_RDWR);
+    /* stdout */
+    dup(0);
+    /* stderror */
+    dup(0);
+}
+
+void run() {
+    sleep(10000);
+}
+
+
+int main(int argc, char **argv) {
 
     /* create new process */
-    pid = fork ( );
-    if (pid == -1)
-        return -1;
-    else if (pid != 0)
-        exit (EXIT_SUCCESS);
+    create_child_process();
 
     /* create new session and process group */
-    if (setsid ( ) == -1)
-        return -1;
+    create_new_session();
 
     /* set the working directory to the root directory */
-    if (chdir ("/") == -1)
-        return -1;
+    change_current_directory();
 
     /* close all open files--NR_OPEN is overkill, but works */
-    for (i = 0; i < NR_OPEN; i++)
-        close (i);
+    close_opened_files();
 
     /* redirect fd's 0,1,2 to /dev/null */
-    open ("/dev/null", O_RDWR);
-    /* stdin */
-    dup (0);
-    /* stdout */
-    dup (0);
-    /* stderror */
+    redirect_stdin_out_err();
 
     /* do its daemon thing... */
-    sleep(10000);
+    run();
 
     return 0;
 }
