@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <signal.h>
 
 #ifdef __APPLE__
 #define NR_OPEN 1024
@@ -11,7 +12,7 @@
 #include <linux/limits.h>
 #endif
 
-void create_child_process() {
+void fork_process() {
     pid_t pid = fork();
     if (pid == -1)
         exit(-1);
@@ -43,6 +44,10 @@ void redirect_stdin_out_err() {
     dup(0);
 }
 
+void handle_signals() {
+    signal(SIGHUP, SIG_IGN);
+}
+
 void run() {
     sleep(10000);
 }
@@ -51,10 +56,16 @@ void run() {
 int main(int argc, char **argv) {
 
     /* create new process */
-    create_child_process();
+    fork_process();
 
     /* create new session and process group */
     create_new_session();
+
+    /* handle signals */
+    handle_signals();
+
+    /* fork again to kill session leader */
+    fork_process();
 
     /* set the working directory to the root directory */
     change_current_directory();

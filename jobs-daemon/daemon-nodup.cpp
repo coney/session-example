@@ -19,7 +19,7 @@ int main(int argc, char **argv) {
     fprintf(logfile, "log file fd is %d\n", fileno(logfile));
     fflush(logfile);
 
-    system("./daemon-nohup.sh");
+    system("./daemon-nodup.sh");
 
     fprintf(logfile, "daemon exit\n");
     fclose(logfile);
