@@ -1,4 +1,4 @@
-TARGETS = daemon signal_receiver
+TARGETS = daemon signal_receiver daemon-nodup
 
 all: $(TARGETS)
 
