@@ -12,8 +12,8 @@
 #include <boost/tr1/functional.hpp>
 
 class CalcServer {
-    typedef std::tr1::function<int(int)> worker_t;
 public:
+    typedef std::tr1::function<int(int)> worker_t;
     CalcServer(worker_t worker) {
         m_sockfd = -1;
         m_worker = worker;
