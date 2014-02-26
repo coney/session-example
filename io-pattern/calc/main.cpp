@@ -7,6 +7,7 @@
 #include "multithread-worker.h"
 #include "nonblock-worker.h"
 #include "select-worker.h"
+#include "epoll-worker.h"
 
 int main(int argc, char **argv) {
     int opt;
@@ -26,6 +27,9 @@ int main(int argc, char **argv) {
             break;
         case 'x':
             worker = SelectWorker();
+            break;
+        case 'e':
+            worker = EPollWorker();
             break;
         default:
             break;
