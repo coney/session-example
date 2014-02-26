@@ -25,6 +25,8 @@ public:
             assert(fd != -1);
         }
         m_fd = fd;
+        m_pos = 0;
+        memset(m_buffer, 0, sizeof(m_buffer));
     }
 
     virtual ~HttpSocket() {
@@ -45,29 +47,28 @@ public:
     }
 
     int receive() {
-        int pos = 0, ret = 0;
-        char buf[4096] = {0};
+        int ret = 0;
+        char m_buffer[4096] = {0};
 
-        while (pos < sizeof(buf) && (ret = read(m_fd, buf + pos, sizeof(buf) - pos)) > 0)
+        while (m_pos < (sizeof(m_buffer) - 1) && (ret = read(m_fd, m_buffer + m_pos, sizeof(m_buffer) - m_pos)) >= 0)
         {
-            pos += ret;
-            if (onReceive(buf, false))
+            m_pos += ret;
+            if (onReceive(m_buffer, ret == 0))
             {
-                return pos;
+                m_pos = 0;
+                memset(m_buffer, 0, sizeof(m_buffer));
+                break;
             }
-        }
-
-        if (ret == 0)
-        {
-            onReceive(buf, true);
-            return pos;
         }
 
         return ret;
     }
 
     int send(const std::string& content) {
-        return write(m_fd, content.c_str(), content.size());
+        // assume that there is enough buffer to send the content
+        int ret = write(m_fd, content.c_str(), content.size());
+        assert(ret == content.size());
+        return ret;
     }
 
     template<class T>
@@ -82,7 +83,9 @@ protected:
     virtual bool onReceive(const std::string &content, bool connectionClosed) = 0;
 
 private:
+    int m_pos;
     int m_fd;
+    char m_buffer[4096];
 };
 
 #endif
