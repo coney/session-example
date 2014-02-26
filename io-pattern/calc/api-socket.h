@@ -10,7 +10,7 @@ public:
     ApiSocket(AppSocket *appSocket);
 
     int sendRequest(int a, int b);
-
+    AppSocket *getAppSocket();
 protected:
     virtual bool onReceive(const std::string &content, bool connectionClosed);
 

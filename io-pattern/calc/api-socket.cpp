@@ -50,3 +50,9 @@ int ApiSocket::parseResponse(const std::string &response) {
     }
     return -1;
 }
+
+AppSocket * ApiSocket::getAppSocket() {
+    return m_appSocket;
+}
+
+

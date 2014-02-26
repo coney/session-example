@@ -6,11 +6,12 @@
 #include "single-worker.h"
 #include "multithread-worker.h"
 #include "nonblock-worker.h"
+#include "select-worker.h"
 
 int main(int argc, char **argv) {
     int opt;
     CalcServer::worker_t worker;
-    while ((opt = getopt(argc, argv, "smn")) != -1)
+    while ((opt = getopt(argc, argv, "smnxe")) != -1)
     {
         switch (opt)
         {
@@ -22,6 +23,9 @@ int main(int argc, char **argv) {
             break;
         case 'n':
             worker = NonblockWorker();
+            break;
+        case 'x':
+            worker = SelectWorker();
             break;
         default:
             break;
