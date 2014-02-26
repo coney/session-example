@@ -1,5 +1,5 @@
 #Prject Info
-TARGET  = calc-server
+TARGET  = bin/calc-server
 INC_DIR +=
 LIB_DIR +=
 SRC_DIR = .
@@ -37,8 +37,7 @@ endif
 .PHONY: all clean
 
 all: $(TARGET)
-	@if [ ! -d $(OUT_DIR) ]; then mkdir $(OUT_DIR); fi
-	cp $(TARGET) $(OUT_DIR)/$(TARGET)
+
 clean:
 	rm -f $(ALL_OBJ) $(ALL_DEP) $(TARGET) $(OUT_DIR)/$(TARGET)
 
