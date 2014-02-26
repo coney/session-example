@@ -49,7 +49,7 @@ private:
 
 
 
-        ret = ::listen(fd, 5);
+        ret = ::listen(fd, 100);
         assert(ret == 0);
 
         return fd;
@@ -58,7 +58,7 @@ private:
     int accept() {
         int fd;
         struct sockaddr_in inaddr;
-        socklen_t inlen;
+        socklen_t inlen = sizeof(inaddr);
         fd = ::accept(m_sockfd, (struct sockaddr *) &inaddr, &inlen);
         assert(fd != -1);
         printf("connected from %s:%u\n", inet_ntoa(inaddr.sin_addr),

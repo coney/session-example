@@ -2,6 +2,8 @@
 #define __SOCKET_BASE_H__
 #include <sys/socket.h>
 #include <unistd.h>
+#include <stdlib.h>
+#include <memory.h>
 
 #include <map>
 #include <string>
@@ -17,7 +19,7 @@
 #include <fcntl.h>
 #define CRLF        "\r\n"
 
-#ifdef SCENE_NONBLOCK
+#ifdef LOCAL_DEBUG
 static inline unsigned int get_tick_count() {
     struct timeval ts;
     gettimeofday(&ts, NULL);
@@ -53,12 +55,24 @@ public:
         inaddr.sin_addr.s_addr = inet_addr(ip.c_str());
         inaddr.sin_port = htons(hport);
 
-        return ::connect(m_fd, (struct sockaddr *)&inaddr, sizeof(inaddr));
+        int ret = ::connect(m_fd, (struct sockaddr *)&inaddr, sizeof(inaddr));
+        if (ret < 0 && errno == EINPROGRESS) {
+            // non-block socket, wait for connection established
+            fd_set wfds;
+            FD_ZERO(&wfds);
+            FD_SET(m_fd, &wfds);
+
+            struct timeval timeout = {5};
+            ret = select(m_fd + 1, NULL, &wfds, NULL, &timeout);
+            assert(ret == 1);
+            return 0;
+        }
+        return ret;
     }
 
     int internalReceive() {
         int ret = 0;
-        char m_buffer[4096] = { 0 };
+        m_buffer[4096] = { 0 };
 
         while (m_pos < (sizeof(m_buffer)-1) && (ret = read(m_fd, m_buffer + m_pos, sizeof(m_buffer)-m_pos)) >= 0) {
             m_pos += ret;
@@ -72,11 +86,12 @@ public:
 
         return ret;
     }
+
     int receive() {
-#ifdef SCENE_NONBLOCK
+#ifdef LOCAL_DEBUG
         unsigned int start = get_tick_count();
         int ret = internalReceive();
-        printf("[%u] receive cost %ums\n", m_fd, get_tick_count() - start);
+        printf("fd [%u] receive cost %ums\n", m_fd, get_tick_count() - start);
         return ret;
 #else
         return internalReceive();
@@ -90,7 +105,7 @@ public:
     int send(const std::string& content) {
         // assume that there is enough buffer to send the content
         int ret = write(m_fd, content.c_str(), content.size());
-        assert(ret == content.size());
+        assert((unsigned int)ret == content.size());
         return ret;
     }
 
@@ -112,7 +127,7 @@ protected:
 
 private:
     bool m_recv_done;
-    int m_pos;
+    unsigned int m_pos;
     int m_fd;
     char m_buffer[4096];
 };

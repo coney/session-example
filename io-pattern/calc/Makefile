@@ -3,7 +3,7 @@ TARGET  = bin/calc-server
 INC_DIR +=
 LIB_DIR +=
 SRC_DIR = .
-LIB     += 
+LIB     += -lpthread
 OUT_DIR = ./bin
 LIB_DEP =
 
@@ -12,8 +12,8 @@ TARGET  := $(strip $(TARGET))
 #CC      = gcc$(GCC_SUFFIX)
 #CXX     = g++$(GCC_SUFFIX)
 #CPP     = cpp$(GCC_SUFFIX)
-CFLAGS  += $(C_INC) -pthread
-CXXFLAGS+= $(C_INC) -pthread
+CFLAGS  += $(C_INC) -pthread -Wall
+CXXFLAGS+= $(C_INC) -pthread -std=c++0x -Wall
 
 C_INC   = $(INC_DIR:%=-I%) $(INC)
 C_LIB   = $(LIB_DIR:%=-L%) $(LIB)
@@ -29,8 +29,8 @@ ALL_OBJ = $(C_OBJ) $(CXX_OBJ)
 ALL_DEP = $(C_DEP) $(CXX_DEP)
 
 ifeq ($(debug), 1)
-CFLAGS   += -g -DLOCAL_DEBUG
-CXXFLAGS += -g -DLOCAL_DEBUG
+CFLAGS   += -O0 -g -DLOCAL_DEBUG
+CXXFLAGS += -O0 -g -DLOCAL_DEBUG
 endif
 
 

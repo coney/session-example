@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <set>
 #include <pthread.h>
+#include <errno.h>
 #include "app-socket.h"
 
 class NonblockWorker {
@@ -53,7 +54,6 @@ private:
         pthread_mutex_lock(&m_sockets_guard);
         std::set<AppSocket *> sockets = m_sockets;
         pthread_mutex_unlock(&m_sockets_guard);
-        //printf("size %d\n", m_sockets.size());
 
         for (std::set<AppSocket *>::iterator it = sockets.begin();
             it != sockets.end(); ++it) {
@@ -80,11 +80,7 @@ private:
 
     void receive(HttpSocket *socket) {
         int ret = socket->receive();
-        //if (ret < 0)
-        //{
-        //    printf("%d %d\n", ret, errno);
-        //}
-        
+
         // connection closed or on error
         if (!socket->receiveDone() && ret <= 0 && errno != EAGAIN) {
             throw std::runtime_error("io failed in poll!");

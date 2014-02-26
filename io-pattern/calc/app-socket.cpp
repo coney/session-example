@@ -1,4 +1,7 @@
+#include <stdio.h>
+#include <stdexcept>
 #include "app-socket.h"
+
 
 using namespace std;
 std::string AppSocket::generateAppResponse(int value)

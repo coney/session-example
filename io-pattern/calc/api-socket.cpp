@@ -1,9 +1,13 @@
+#include <stdio.h>
+#include <errno.h>
+
 #include "api-socket.h"
 #include "app-socket.h"
 
 using namespace std;
 
 bool ApiSocket::onReceive(const std::string &content, bool connectionClosed) {
+    //printf("receive [%s] close:%d\n", content.c_str(), connectionClosed);
     if (!connectionClosed) {
         // Should measure the content length, but I'm using
         // the "Connection: Close" in request header
@@ -16,14 +20,10 @@ bool ApiSocket::onReceive(const std::string &content, bool connectionClosed) {
 
 int ApiSocket::sendRequest(int a, int b) {
     int ret = connect("127.0.0.1", 3000);
-    if (ret < 0 && errno == EINPROGRESS) {
-        // for non-block
-        usleep(1000);
-    }
-
+    assert(ret == 0);
     string request = generateRequest(a, b);
     ret = send(request);
-    assert(ret == request.size());
+    assert((unsigned int)ret == request.size());
 
     return 0;
 }
