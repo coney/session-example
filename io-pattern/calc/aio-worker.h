@@ -1,18 +1,8 @@
 #ifndef __AIO_WORKER_H__
 #define __AIO_WORKER_H__
 
-#include <unistd.h>
-#include <map>
-#include <pthread.h>
-#include <sys/select.h>
-#include <list>
-#include <functional>
-#include <algorithm>
-#include <sys/epoll.h>
-#include <signal.h>
-
+#include "calc.h"
 #include "app-socket.h"
-#include <aio.h>
 
 class AIOWorker {
 public:
@@ -74,7 +64,7 @@ private:
             }
         }
         else {
-            printf("error %d errno %d\n", aio_error(cb), errno);
+            logdebug("error %d errno %d\n", aio_error(cb), errno);
             assert(0);
         }
 

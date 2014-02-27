@@ -1,6 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-
+#include "calc.h"
 #include "calc-server.h"
 
 #include "single-worker.h"
@@ -43,6 +41,6 @@ int main(int argc, char **argv) {
     if (!worker) {
         worker = SingleWorker();
     }
-    
+
     return CalcServer(worker).run();
 }

@@ -1,22 +1,8 @@
 #ifndef __SOCKET_BASE_H__
 #define __SOCKET_BASE_H__
-#include <sys/socket.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <memory.h>
 
-#include <map>
-#include <string>
-#include <netinet/in.h>
-#include <sstream>
-#include <assert.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <netinet/ip.h>
-#include <arpa/inet.h>
-#include <string>
-#include <sys/time.h>
-#include <fcntl.h>
+#include "calc.h"
+
 #define CRLF        "\r\n"
 
 #ifdef LOCAL_DEBUG
@@ -90,7 +76,7 @@ public:
 #ifdef LOCAL_DEBUG
         unsigned int start = get_tick_count();
         int ret = internalReceive();
-        printf("fd [%u] receive cost %ums\n", m_fd, get_tick_count() - start);
+        logdebug("fd [%u] receive cost %ums\n", m_fd, get_tick_count() - start);
         return ret;
 #else
         return internalReceive();
@@ -126,14 +112,6 @@ public:
     int setNonBlock() {
         int flags = (fcntl(m_fd, F_GETFL, 0) | O_NONBLOCK);
         return fcntl(m_fd, F_SETFL, flags);
-    }
-
-    template<class T>
-    std::string toString(const T &val) {
-        std::string str;
-        std::stringstream ss;
-        ss << val;
-        return ss.str();
     }
 
 protected:

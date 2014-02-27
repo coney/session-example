@@ -1,7 +1,7 @@
 #ifndef __SINGLE_WORKER_H__
 #define __SINGLE_WORKER_H__
 
-#include <unistd.h>
+#include "calc.h"
 
 #include "app-socket.h"
 

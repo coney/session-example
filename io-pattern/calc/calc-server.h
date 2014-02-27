@@ -1,15 +1,7 @@
 #ifndef __CalcServer_H_
 #define __CalcServer_H_
 
-#include <unistd.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <netinet/ip.h>
-#include <arpa/inet.h>
-#include <assert.h>
-
-#include <functional>
-#include <boost/tr1/functional.hpp>
+#include "calc.h"
 
 class CalcServer {
 public:
@@ -21,9 +13,11 @@ public:
     virtual ~CalcServer() {
         close(m_sockfd);
     }
+
+
     int run(int port = 8000) {
         m_sockfd = listen(port);
-        printf("listening at %u\n", port);
+        logdebug("listening at %u\n", port);
         while(1) {
             m_worker(accept());
         }
@@ -62,12 +56,12 @@ private:
             fd = ::accept(m_sockfd, (struct sockaddr *) &inaddr, &inlen);
         } while (fd == -1 && errno == EINTR);
         if (fd == -1){
-            printf("accept fd %d\n", fd);
+            logdebug("accept fd %d\n", fd);
         }
-        
+
         assert(fd != -1);
-        printf("connected from %s:%u\n", inet_ntoa(inaddr.sin_addr),
-                ntohs(inaddr.sin_port));
+        logdebug("connected from %s:%u\n", inet_ntoa(inaddr.sin_addr),
+            ntohs(inaddr.sin_port));
         return fd;
     }
 

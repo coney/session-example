@@ -1,7 +1,7 @@
 #ifndef __API_SOCKET_H__
 #define __API_SOCKET_H__
 
-#include <sstream>
+#include "calc.h"
 #include "socket-base.h"
 
 class AppSocket;

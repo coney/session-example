@@ -1,15 +1,8 @@
 #ifndef __EPOLL_WORKER_H__
 #define __EPOLL_WORKER_H__
 
-#include <unistd.h>
-#include <map>
-#include <pthread.h>
-#include <sys/select.h>
-#include <list>
+#include "calc.h"
 #include "app-socket.h"
-#include <functional>
-#include <algorithm>
-#include <sys/epoll.h>
 
 class EPollWorker {
 public:
@@ -44,7 +37,7 @@ private:
         event.events = EPOLLIN | EPOLLRDHUP;
         event.data.ptr = socket;
         int ret = epoll_ctl(m_epfd, EPOLL_CTL_ADD, socket->getFd(), &event);
-        printf("epoll add fd:%d errno:%d ret:%d socket:%p\n",socket->getFd(),
+        logdebug("epoll add fd:%d errno:%d ret:%d socket:%p\n",socket->getFd(),
             errno, ret, socket);
         assert(ret == 0);
         return 0;
@@ -80,11 +73,11 @@ private:
         assert(ret >= 0);
         if (ret > 0)
         {
-            printf("%d sockets is ready\n", ret);
+            logdebug("%d sockets is ready\n", ret);
             for (unsigned int i = 0; i < (unsigned int)ret; ++i)
             {
                 struct epoll_event &event = events[i];
-                //printf("events %x on socket:%p\n", event.events, event.data.ptr);
+                //logdebug("events %x on socket:%p\n", event.events, event.data.ptr);
                 // just ignore EPOLLHUP
                 if ((event.events & EPOLLIN))
                 {

@@ -1,9 +1,7 @@
-#include <stdio.h>
-#include <stdexcept>
 #include "app-socket.h"
 
-
 using namespace std;
+
 std::string AppSocket::generateAppResponse(int value)
 {
     stringstream ss;
@@ -30,7 +28,7 @@ bool AppSocket::onReceive(const std::string &content, bool connectionClosed)
         m_apiSocket.sendRequest(value.first, value.second);
     }
     catch (std::exception &e) {
-        printf("AppSocket exception: %s\n", e.what());
+        logdebug("AppSocket exception: %s\n", e.what());
         return -1;
     }
 

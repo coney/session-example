@@ -1,14 +1,10 @@
 #ifndef __SELECT_WORKER_H__
 #define __SELECT_WORKER_H__
 
-#include <unistd.h>
-#include <map>
-#include <pthread.h>
-#include <sys/select.h>
-#include <list>
+
 #include "app-socket.h"
-#include <functional>
-#include <algorithm>
+
+#include "calc.h"
 
 class SelectWorker {
 public:
@@ -46,7 +42,7 @@ private:
         // add app fd and api fd into m_fds
         // and build mapping in m_sockets
         pthread_mutex_lock(&m_sockets_guard);
-        //printf("add socket %d %d\n", socket->getFd(),
+        //logdebug("add socket %d %d\n", socket->getFd(),
         //    socket->getApiSocket()->getFd());
         m_sockets[socket->getFd()] = socket;
         m_sockets[socket->getApiSocket()->getFd()] = socket->getApiSocket();
@@ -56,7 +52,7 @@ private:
     void removeSocket(AppSocket *socket) {
         m_sockets.erase(socket->getFd());
         m_sockets.erase(socket->getApiSocket()->getFd());
-        //printf("remove socket %d %d\n", socket->getFd(),
+        //logdebug("remove socket %d %d\n", socket->getFd(),
         //    socket->getApiSocket()->getFd());
         delete socket;
     }

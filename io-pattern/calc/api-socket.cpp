@@ -1,13 +1,10 @@
-#include <stdio.h>
-#include <errno.h>
-
 #include "api-socket.h"
 #include "app-socket.h"
 
 using namespace std;
 
 bool ApiSocket::onReceive(const std::string &content, bool connectionClosed) {
-    //printf("receive [%s] close:%d\n", content.c_str(), connectionClosed);
+    //logdebug("receive [%s] close:%d\n", content.c_str(), connectionClosed);
     if (!connectionClosed) {
         // Should measure the content length, but I'm using
         // the "Connection: Close" in request header

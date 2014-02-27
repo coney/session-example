@@ -1,10 +1,7 @@
 #ifndef __NONBLOCK_WORKER_H__
 #define __NONBLOCK_WORKER_H__
 
-#include <unistd.h>
-#include <set>
-#include <pthread.h>
-#include <errno.h>
+#include "calc.h"
 #include "app-socket.h"
 
 class NonblockWorker {
@@ -57,23 +54,23 @@ private:
 
         for (std::set<AppSocket *>::iterator it = sockets.begin();
             it != sockets.end(); ++it) {
-            bool remove = false;
-            AppSocket *appSocket = *it;
+                bool remove = false;
+                AppSocket *appSocket = *it;
 
-            try {
-                receive(appSocket->receiveDone() ?
-                    (HttpSocket *)appSocket->getApiSocket() :
+                try {
+                    receive(appSocket->receiveDone() ?
+                        (HttpSocket *)appSocket->getApiSocket() :
                     (HttpSocket *)appSocket);
 
-                remove = (appSocket->receiveDone() && appSocket->getApiSocket()->receiveDone());
-            }
-            catch (std::exception &e) {
-                remove = true;
-            }
+                    remove = (appSocket->receiveDone() && appSocket->getApiSocket()->receiveDone());
+                }
+                catch (std::exception &e) {
+                    remove = true;
+                }
 
-            if (remove) {
-                removeSocket(appSocket);
-            }
+                if (remove) {
+                    removeSocket(appSocket);
+                }
         }
     }
 

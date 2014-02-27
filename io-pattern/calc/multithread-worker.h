@@ -1,9 +1,7 @@
 #ifndef __MULTITHREAD_WORKER_H__
 #define __MULTITHREAD_WORKER_H__
 
-#include <unistd.h>
-#include <semaphore.h>
-#include <utility>
+#include "calc.h"
 #include "single-worker.h"
 
 class MultithreadWorker

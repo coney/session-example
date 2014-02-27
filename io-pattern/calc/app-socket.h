@@ -1,11 +1,9 @@
 #ifndef __APP_SOCKET_H__
 #define __APP_SOCKET_H__
 
+#include "calc.h"
 #include "socket-base.h"
 #include "api-socket.h"
-
-#include <utility>
-#include <sstream>
 
 class AppSocket : public HttpSocket {
 public:
