@@ -72,7 +72,6 @@ public:
 
     int internalReceive() {
         int ret = 0;
-        m_buffer[4096] = { 0 };
 
         while (m_pos < (sizeof(m_buffer)-1) && (ret = read(m_fd, m_buffer + m_pos, sizeof(m_buffer)-m_pos)) >= 0) {
             m_pos += ret;
