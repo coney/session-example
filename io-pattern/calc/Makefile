@@ -3,7 +3,7 @@ TARGET  = bin/calc-server
 INC_DIR +=
 LIB_DIR +=
 SRC_DIR = .
-LIB     += -lpthread
+LIB     += -lpthread -lrt
 OUT_DIR = ./bin
 LIB_DEP =
 

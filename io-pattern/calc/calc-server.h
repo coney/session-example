@@ -47,8 +47,6 @@ private:
         ret = bind(fd, (struct sockaddr *) &inaddr, sizeof(inaddr));
         assert(ret == 0);
 
-
-
         ret = ::listen(fd, 100);
         assert(ret == 0);
 
@@ -59,7 +57,14 @@ private:
         int fd;
         struct sockaddr_in inaddr;
         socklen_t inlen = sizeof(inaddr);
-        fd = ::accept(m_sockfd, (struct sockaddr *) &inaddr, &inlen);
+        do 
+        {
+            fd = ::accept(m_sockfd, (struct sockaddr *) &inaddr, &inlen);
+        } while (fd == -1 && errno == EINTR);
+        if (fd == -1){
+            printf("accept fd %d\n", fd);
+        }
+        
         assert(fd != -1);
         printf("connected from %s:%u\n", inet_ntoa(inaddr.sin_addr),
                 ntohs(inaddr.sin_port));

@@ -97,6 +97,21 @@ public:
 #endif
     }
 
+    int receive(const char *buf, int len) {
+        assert(sizeof(m_buffer) - m_pos > (unsigned int)len);
+        if (len) {
+            memcpy(m_buffer + m_pos, buf, len);
+            m_pos += len;
+        }
+
+        if (onReceive(m_buffer, len == 0)) {
+            m_recv_done = true;
+            m_pos = 0;
+            memset(m_buffer, 0, sizeof(m_buffer));
+        }
+        return len;
+    }
+
     bool receiveDone() {
         return m_recv_done;
     }

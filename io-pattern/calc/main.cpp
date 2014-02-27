@@ -8,11 +8,12 @@
 #include "nonblock-worker.h"
 #include "select-worker.h"
 #include "epoll-worker.h"
+#include "aio-worker.h"
 
 int main(int argc, char **argv) {
     int opt;
     CalcServer::worker_t worker;
-    while ((opt = getopt(argc, argv, "smnxe")) != -1)
+    while ((opt = getopt(argc, argv, "smnxea")) != -1)
     {
         switch (opt)
         {
@@ -31,8 +32,11 @@ int main(int argc, char **argv) {
         case 'e':
             worker = EPollWorker();
             break;
-        default:
+        case 'a':
+            worker = AIOWorker();
             break;
+        default:
+            return -1;
         }
     }
 
