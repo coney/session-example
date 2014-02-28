@@ -40,5 +40,6 @@
 
 #define logdebug        printf
 
+#define SOCKET_BUFSIZE  4096
 
 #endif

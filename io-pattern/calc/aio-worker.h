@@ -35,12 +35,14 @@ private:
 
         if (aio_error(cb) == 0) {
             int ret = aio_return(cb);
+            
+            // enclose string with '\0'
             ((char *)cb->aio_buf)[ret] = 0;
-            socket->receive((const char *)cb->aio_buf, ret);
+
+            socket->asyncReceive((const char *)cb->aio_buf, ret);
             if (!socket->receiveDone()) {
                 // continue reading
-                ret = aio_read(cb);
-                assert(ret == 0);
+                ensure(aio_read(cb) == 0);
             } else {
                 delete [] (char *)cb->aio_buf;
                 delete sockInfo;
@@ -54,7 +56,9 @@ private:
                 }
                 else {
                     ApiSocket *apiSocket = dynamic_cast<ApiSocket *>(socket);
-                    if (apiSocket != NULL && apiSocket->receiveDone() &&
+                    assert(apiSocket);
+
+                    if (apiSocket->receiveDone() &&
                         apiSocket->getAppSocket()->receiveDone()) {
                             // all complete, clean up
                             delete apiSocket->getAppSocket();
@@ -71,22 +75,18 @@ private:
     }
 
     void aioAddSocket(HttpSocket *socket) {
-        const unsigned int bufsize = 4096;
-
         SocketInfo *sockInfo = new SocketInfo(aiocb(), socket);
-
         memset(&sockInfo->first, 0, sizeof(sockInfo->first));
 
         sockInfo->first.aio_fildes = socket->getFd();
-        sockInfo->first.aio_buf = new char[bufsize];
-        sockInfo->first.aio_nbytes = bufsize;
+        sockInfo->first.aio_buf = new char[SOCKET_BUFSIZE];
+        sockInfo->first.aio_nbytes = SOCKET_BUFSIZE;
 
         sockInfo->first.aio_sigevent.sigev_notify = SIGEV_SIGNAL;
         sockInfo->first.aio_sigevent.sigev_signo = SIGIO;
         sockInfo->first.aio_sigevent.sigev_value.sival_ptr = sockInfo;
 
-        int ret = aio_read(&sockInfo->first);
-        assert(ret == 0);
+        ensure(aio_read(&sockInfo->first) == 0);
     }
 
     void addSocket(int fd) {

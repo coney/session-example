@@ -4,6 +4,7 @@
 #include "calc.h"
 #include "app-socket.h"
 
+
 class NonblockWorker {
 public:
     NonblockWorker() {
@@ -52,10 +53,9 @@ private:
         std::set<AppSocket *> sockets = m_sockets;
         pthread_mutex_unlock(&m_sockets_guard);
 
-        for (std::set<AppSocket *>::iterator it = sockets.begin();
-            it != sockets.end(); ++it) {
+        std::for_each(sockets.begin(), sockets.end(), 
+            [&](AppSocket* appSocket) {
                 bool remove = false;
-                AppSocket *appSocket = *it;
 
                 try {
                     receive(appSocket->receiveDone() ?
@@ -71,7 +71,7 @@ private:
                 if (remove) {
                     removeSocket(appSocket);
                 }
-        }
+        });
     }
 
 
