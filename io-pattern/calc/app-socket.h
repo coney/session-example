@@ -7,7 +7,7 @@
 
 class AppSocket : public HttpSocket {
 public:
-    AppSocket(int fd);
+    AppSocket(int fd, bool sync = false);
     int sendResponse(int value);
     ApiSocket *getApiSocket();
 
@@ -19,6 +19,7 @@ protected:
     std::string generateAppResponse(int value);
 
 private:
-    ApiSocket m_apiSocket;
+    ApiSocket   m_apiSocket;
+    bool        m_sync;
 };
 #endif

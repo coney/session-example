@@ -11,7 +11,13 @@ bool ApiSocket::onReceive(const std::string &content, bool connectionClosed) {
         // Server side will close the connection after replys
         return false;
     }
-    m_appSocket->sendResponse(parseResponse(content));
+
+    m_result = parseResponse(content);
+
+    if (!m_sync){
+        m_appSocket->sendResponse(parseResponse(content));
+    }
+    
     return true;
 }
 
@@ -21,12 +27,13 @@ int ApiSocket::sendRequest(int a, int b) {
     string request = generateRequest(a, b);
     ret = send(request);
     assert((unsigned int)ret == request.size());
-
     return 0;
 }
 
-ApiSocket::ApiSocket(AppSocket *appSocket) : HttpSocket() {
+ApiSocket::ApiSocket(AppSocket *appSocket, bool sync) : HttpSocket() {
+    m_sync = sync;
     m_appSocket = appSocket;
+    m_result = -1;
 }
 
 std::string ApiSocket::generateRequest(int a, int b) {
@@ -51,5 +58,12 @@ int ApiSocket::parseResponse(const std::string &response) {
 AppSocket * ApiSocket::getAppSocket() {
     return m_appSocket;
 }
+
+int ApiSocket::doQuery( int a, int b ) {
+    sendRequest(a, b);
+    receive();
+    return m_result;
+}
+
 
 

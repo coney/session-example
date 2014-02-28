@@ -7,8 +7,12 @@
 class AppSocket;
 class ApiSocket : public HttpSocket{
 public:
-    ApiSocket(AppSocket *appSocket);
+    ApiSocket(AppSocket *appSocket, bool sync = false);
 
+    // send request, receive and parse response
+    int doQuery(int a, int b);
+
+    // just send the request
     int sendRequest(int a, int b);
     AppSocket *getAppSocket();
 protected:
@@ -17,7 +21,9 @@ protected:
 private:
     int parseResponse(const std::string &response);
     std::string generateRequest(int a, int b);
-    AppSocket *m_appSocket;
+    AppSocket   *m_appSocket;
+    bool        m_sync;
+    int         m_result;
 };
 
 #endif

@@ -24,12 +24,17 @@ std::pair<int, int> AppSocket::parseAppRequest(const std::string &content)
 bool AppSocket::onReceive(const std::string &content, bool connectionClosed)
 {
     try {
-        std::pair<int, int> value = parseAppRequest(content);
-        m_apiSocket.sendRequest(value.first, value.second);
+        std::pair<int, int> values = parseAppRequest(content);
+        if (m_sync) {
+            sendResponse(m_apiSocket.doQuery(values.first, values.second));
+        }
+        else {
+            m_apiSocket.sendRequest(values.first, values.second);
+        }
     }
     catch (std::exception &e) {
         logdebug("AppSocket exception: %s\n", e.what());
-        return -1;
+        return false;
     }
 
     return true;
@@ -40,7 +45,8 @@ int AppSocket::sendResponse(int value)
     return send(generateAppResponse(value));
 }
 
-AppSocket::AppSocket(int fd) : HttpSocket(fd), m_apiSocket(this)
+AppSocket::AppSocket(int fd, bool sync /*= false*/ ) 
+    : HttpSocket(fd), m_apiSocket(this, sync), m_sync(sync)
 {
 
 }

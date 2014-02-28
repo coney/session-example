@@ -63,8 +63,6 @@ public:
             m_pos += ret;
             if (onReceive(m_buffer, ret == 0)) {
                 m_recv_done = true;
-                m_pos = 0;
-                memset(m_buffer, 0, sizeof(m_buffer));
                 break;
             }
         }

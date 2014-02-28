@@ -9,9 +9,8 @@ class SingleWorker
 {
 public:
     int operator()(int fd) {
-        AppSocket sock(fd);
+        AppSocket sock(fd, true);
         sock.receive();
-        sock.getApiSocket()->receive();
         return 0;
     }
 };
