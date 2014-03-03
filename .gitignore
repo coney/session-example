@@ -5,3 +5,5 @@
 *.suo
 *.vcxproj*
 *.*sdf
+
+.DS_Store

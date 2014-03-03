@@ -37,8 +37,8 @@ private:
         event.events = EPOLLIN | EPOLLRDHUP;
         event.data.ptr = socket;
         int ret = epoll_ctl(m_epfd, EPOLL_CTL_ADD, socket->getFd(), &event);
-        logdebug("epoll add fd:%d errno:%d ret:%d socket:%p\n",socket->getFd(),
-            errno, ret, socket);
+        //logdebug("epoll add fd:%d errno:%d ret:%d socket:%p\n",socket->getFd(),
+        //    errno, ret, socket);
         assert(ret == 0);
         return 0;
     }
@@ -73,7 +73,7 @@ private:
         assert(ret >= 0);
         if (ret > 0)
         {
-            logdebug("%d sockets is ready\n", ret);
+            //logdebug("%d sockets is ready\n", ret);
             for (unsigned int i = 0; i < (unsigned int)ret; ++i)
             {
                 struct epoll_event &event = events[i];
