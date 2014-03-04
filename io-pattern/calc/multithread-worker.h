@@ -17,24 +17,21 @@ public:
         sem_wait(&m_worker_sem);
 
         pthread_t thread;
-        pthread_create(&thread, NULL, workThreadProc, 
-            new std::pair<MultithreadWorker *, int>(this, fd));
+        pthread_create(&thread, NULL, [&](void *arg){
+            std::pair<MultithreadWorker *, int> *params = (std::pair<MultithreadWorker *, int> *)arg;
+            MultithreadWorker *worker = params->first;
+
+            worker->process(params->second);
+
+            delete params;
+            return (void *)NULL;
+        }, new std::pair<MultithreadWorker *, int>(this, fd));
         pthread_detach(thread);
 
         return 0;
     }
 
 private:
-    static void *workThreadProc(void *arg) {
-        std::pair<MultithreadWorker *, int> *params = (std::pair<MultithreadWorker *, int> *)arg;
-        MultithreadWorker *worker = params->first;
-
-        worker->process(params->second);
-
-        delete params;
-        return NULL;
-    }
-
     void process(int fd) {
         // process with single worker
         SingleWorker()(fd);

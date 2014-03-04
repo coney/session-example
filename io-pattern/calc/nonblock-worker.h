@@ -11,7 +11,14 @@ public:
         m_this = this;
         pthread_t thread;
         pthread_mutex_init(&m_sockets_guard, NULL);
-        pthread_create(&thread, NULL, pollThreadProc, this);
+        pthread_create(&thread, NULL, [&](void *arg){
+            NonblockWorker *worker = (NonblockWorker *)arg;
+            while (1) {
+                worker->poll();
+                usleep(200000);
+            }
+            return (void *)NULL;
+        }, this);
         pthread_detach(thread);
     }
 
@@ -21,16 +28,6 @@ public:
     }
 
 private:
-
-    static void *pollThreadProc(void *arg) {
-        NonblockWorker *worker = (NonblockWorker *)arg;
-        while (1) {
-            worker->poll();
-            usleep(1000000);
-        }
-        return NULL;
-    }
-
     void addSocket(int fd) {
         AppSocket *socket = new AppSocket(fd);
         socket->setNonBlock();
