@@ -1,9 +1,6 @@
 # Project Files
 .idea
 *.xcodeproj
-*.sln
-*.suo
-*.vcxproj*
 *.*sdf
 
 .DS_Store
