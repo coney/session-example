@@ -44,8 +44,11 @@
     <ClCompile Include="spec\CallOnceSpec.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="spec\ConditionVariableSpec.cpp" />
+    <ClCompile Include="spec\ConditionVariableSpec.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="spec\UniqueLock.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

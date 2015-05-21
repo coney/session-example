@@ -84,13 +84,12 @@
     <ClCompile Include="gmock\gmock-gtest-all.cpp" />
     <ClCompile Include="gmock\gmock_main.cpp" />
     <ClCompile Include="spec\CallOnceSpec.cpp" />
+    <ClCompile Include="spec\ConditionVariableSpec.cpp" />
     <ClCompile Include="spec\Futures.cpp" />
+    <ClCompile Include="spec\UniqueLock.cpp" />
     <ClCompile Include="spec\MutexSpec.cpp" />
     <ClCompile Include="spec\RecursiveTimedMutexSpec.cpp" />
     <ClCompile Include="spec\ThreadSpec.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="spec\ConditionVariableSpec.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

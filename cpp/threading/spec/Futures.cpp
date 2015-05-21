@@ -37,7 +37,7 @@ TEST(Future, ShouldAbleToReceiveExceptionWhenWaitingForPromisedValue) {
         FAIL();
     }
     catch (std::runtime_error &e) {
-        ASSERT_EQ("promise error", e.what());
+        ASSERT_STREQ("promise error", e.what());
     }
 }
 
