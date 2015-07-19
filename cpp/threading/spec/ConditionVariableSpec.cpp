@@ -60,7 +60,11 @@ TEST(ConditionVariable, AllThreadsShouldWaitForSpecifiedCondition) {
     {
         std::lock_guard<std::mutex> guard(m);
         dataReady = true;
-        cv.notify_all();
+        cv.notify_one();
+        cv.notify_one();
+        cv.notify_one();
+        cv.notify_one();
+        cv.notify_one();
     }
 
     for (auto thread : threads) {
