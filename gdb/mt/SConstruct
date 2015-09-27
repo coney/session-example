@@ -1,0 +1,4 @@
+Program("mt",
+    Glob("*.cpp"),
+    CXXFLAGS=["-O0", "-g", "-pthread"],
+    LIBS=["pthread"])
