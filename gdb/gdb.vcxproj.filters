@@ -18,5 +18,17 @@
     <ClCompile Include="disassembly\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="basic\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="disassembly\build-frame.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="disassembly\password.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="disassembly\arguments.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
