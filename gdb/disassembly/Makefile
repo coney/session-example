@@ -1,8 +1,12 @@
+SRC=$(wildcard *.cpp)
+TARGETS=$(SRC:.cpp=)
 
-all:
-	g++ -O0 -g main.cpp -o main
-	g++ -O0 -g build-frame.cpp -o build-frame
-	g++ -O0 -g arguments.cpp -o arguments
+% : %.cpp
+	g++  -g -O0  $< -o $@
+
+all : $(TARGETS)
+
 clean:
-	rm main build-frame arguments
+	rm -rfv $(TARGETS)
+
 .PHONY: all clean
