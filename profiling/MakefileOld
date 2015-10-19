@@ -1,0 +1,14 @@
+TARGETS = io-bound cpu-bound cpu-bound-opti
+CXXFLAGS += -g -O2
+ifeq ($(gprof), 1)
+	CXXFLAGS+=-pg
+endif
+
+all: $(TARGETS)
+
+clean:
+	rm -fv $(TARGETS)
+
+$(TARGETS): $(addsuffix .cpp,$(TARGETS))
+	$(CXX) $(CXXFLAGS) -o $@ $@.cpp
+

@@ -7,7 +7,7 @@
 
 static std::list<int> cached_values;
 
-int calculate(int number) {
+__attribute__((noinline)) int calculate(int number) {
   std::list<int>::const_iterator it = cached_values.begin();
   for (size_t i = 0; i < number; ++i, ++it);
   return *it;
